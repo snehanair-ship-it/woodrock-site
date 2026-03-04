@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Woodrock Engineering | America's #1 Post Frame Engineering Firm</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       RESET & BASE
+       ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      color: #1A0E09;
+      background: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; height: auto; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+    ul { list-style: none; }
+
+    /* =============================================
+       CONTAINER — matches Figma 1440px canvas
+       Content area ~1200px centered
+       ============================================= */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    /* =============================================
+       ANIMATIONS
+       ============================================= */
+    @keyframes slideUp { from { opacity:0; transform:translateY(35px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes scaleReveal { from { opacity:0; transform:scale(1.04); } to { opacity:1; transform:scale(1); } }
+    @keyframes slideLeft { from { opacity:0; transform:translateX(-40px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes slideRight { from { opacity:0; transform:translateX(40px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes marqueeScroll { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+
+    .reveal { opacity: 0; transition: none; }
+    .reveal.show { animation-fill-mode: both; }
+    .reveal.show[data-anim="up"] { animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    .reveal.show[data-anim="fade"] { animation: fadeIn 0.7s ease both; }
+    .reveal.show[data-anim="scale"] { animation: scaleReveal 0.8s ease both; }
+    .reveal.show[data-anim="left"] { animation: slideLeft 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+    .reveal.show[data-anim="right"] { animation: slideRight 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+
+    /* =============================================
+       1. TOP BAR
+       ============================================= */
+    .top-bar {
+      background: #1A0E09;
+      color: #fff;
+      text-align: center;
+      padding: 8px 16px;
+      font-size: 0.73rem;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* =============================================
+       2. NAVBAR
+       ============================================= */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: box-shadow 0.3s;
+    }
+    .navbar.scrolled { box-shadow: 0 1px 16px rgba(0,0,0,0.05); }
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .logo { display: flex; align-items: center; gap: 5px; }
+    .logo-mark { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #1A0E09; line-height: 1; }
+    .logo-mark .dot { color: #8B4513; font-size: 0.55rem; vertical-align: super; margin: 0 0.5px; }
+    .logo-words { display: flex; flex-direction: column; gap: 1px; }
+    .logo-words .w1 { font-size: 0.48rem; font-weight: 800; letter-spacing: 3.5px; color: #1A0E09; line-height: 1; }
+    .logo-words .w2 { font-size: 0.34rem; font-weight: 500; letter-spacing: 2.2px; color: #999; line-height: 1; }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { font-size: 0.88rem; font-weight: 500; color: #1A0E09; transition: color 0.25s; position: relative; }
+    .nav-links a:hover { color: #8B4513; }
+    .nav-links a::after { content:''; position: absolute; left: 0; bottom: -4px; width: 0; height: 1.5px; background: #8B4513; transition: width 0.25s; }
+    .nav-links a:hover::after { width: 100%; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; padding: 4px; }
+    .hamburger span { width: 20px; height: 1.5px; background: #1A0E09; border-radius: 1px; }
+
+    /* =============================================
+       3. HERO
+       ============================================= */
+    .hero { background: #000; color: #fff; }
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 40px;
+      align-items: end;
+      padding-top: 80px;
+      padding-bottom: 52px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5.5vw, 4.6rem);
+      font-weight: 700;
+      line-height: 1.03;
+      letter-spacing: -0.5px;
+      animation: slideUp 0.9s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .hero-desc { padding-bottom: 4px; }
+    .hero-desc p {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.75;
+      margin-bottom: 28px;
+      max-width: 360px;
+      animation: fadeIn 0.9s ease 0.3s both;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 24px;
+      font-size: 0.87rem;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    .btn-cta .arrow { transition: transform 0.3s; }
+    .btn-cta:hover .arrow { transform: translateX(4px); }
+
+    .btn-outline-light {
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      animation: fadeIn 0.9s ease 0.5s both;
+    }
+    .btn-outline-light:hover { background: #fff; color: #000; border-color: #fff; }
+    .btn-outline-dark { border: 1px solid #1A0E09; color: #1A0E09; }
+    .btn-outline-dark:hover { background: #1A0E09; color: #fff; }
+    .btn-outline-white { border: 1px solid rgba(255,255,255,0.4); color: #fff; }
+    .btn-outline-white:hover { background: #fff; color: #1A0E09; }
+    .btn-solid-dark { background: #1A0E09; color: #fff; border: 1px solid #1A0E09; }
+    .btn-solid-dark:hover { background: #3D2B1F; }
+
+    .hero-img {
+      width: 100%;
+      height: clamp(260px, 28vw, 380px);
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; object-position: center 65%; animation: scaleReveal 1.2s ease 0.15s both; }
+    .hero-img::before { content:''; position: absolute; top: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to bottom, #000, transparent); z-index: 1; }
+
+    /* =============================================
+       4. EXPERIENCE / STATS
+       ============================================= */
+    .experience { padding: 80px 0; }
+    .exp-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 48px;
+    }
+    .exp-row h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 800;
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1.8;
+    }
+    .exp-row p { font-size: 0.93rem; color: #666; line-height: 1.8; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      border-top: 1px solid #E8E4DF;
+      padding-top: 44px;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #1A0E09;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .stat-text { font-size: 0.82rem; color: #888; line-height: 1.65; }
+
+    /* =============================================
+       5. US MAP
+       ============================================= */
+    .map-section {
+      background: #F5F0EB;
+      padding: 48px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+    }
+    .map-section img { max-width: 650px; width: 80%; opacity: 0.25; filter: contrast(0.15) brightness(0.9); }
+
+    /* =============================================
+       6. WE DO
+       ============================================= */
+    .we-do { padding: 100px 0; text-align: center; }
+    .we-do-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(4.5rem, 12vw, 10rem);
+      font-weight: 700;
+      color: #1A0E09;
+      letter-spacing: -3px;
+      line-height: 1;
+      margin-bottom: 44px;
+    }
+    .we-do-tags { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .we-do-tag {
+      padding: 12px 28px;
+      border: 1px solid #ddd;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #555;
+      transition: all 0.3s;
+    }
+    .we-do-tag:hover { border-color: #8B4513; color: #8B4513; transform: translateY(-2px); }
+
+    /* =============================================
+       7. HOW IT WORKS
+       ============================================= */
+    .how-it-works { padding: 80px 0 0; }
+    .how-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .how-header h2 { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; }
+    .how-header p { font-size: 0.93rem; color: #666; line-height: 1.8; align-self: end; }
+    .how-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .how-step { position: relative; height: 380px; overflow: hidden; }
+    .how-step img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s ease; }
+    .how-step:hover img { transform: scale(1.06); }
+    .how-step::after { content:''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 50%, transparent 100%); }
+    .how-overlay {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      z-index: 2;
+      color: #fff;
+    }
+    .how-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #C87A3F;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .how-overlay p { font-size: 0.82rem; color: rgba(255,255,255,0.85); }
+
+    /* =============================================
+       8. OUR PROJECTS
+       ============================================= */
+    .projects { display: grid; grid-template-columns: 1fr 1fr; }
+    .projects-info {
+      background: #111;
+      color: #fff;
+      padding: 72px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .projects-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: #8B4513;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .projects-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 36px;
+      font-weight: 600;
+    }
+    .project-item {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: padding-left 0.3s;
+      cursor: pointer;
+    }
+    .project-item:hover { padding-left: 10px; }
+    .project-item strong { font-size: 0.85rem; font-weight: 600; display: block; letter-spacing: 0.3px; }
+    .project-item .ptag { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 3px; display: block; }
+    .projects-photo { position: relative; overflow: hidden; min-height: 520px; }
+    .projects-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease; }
+    .projects-photo:hover img { transform: scale(1.04); }
+
+    /* =============================================
+       9. TESTIMONIAL
+       ============================================= */
+    .testimonial { padding: 88px 0; }
+    .test-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .test-left h3 {
+      font-weight: 800;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+    .test-left p { font-size: 0.93rem; color: #666; line-height: 1.75; margin-bottom: 28px; }
+    .test-nav { display: flex; gap: 8px; margin-top: 32px; }
+    .test-nav-btn {
+      width: 40px; height: 40px;
+      border: 1px solid #ddd;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: #555;
+      transition: all 0.3s;
+    }
+    .test-nav-btn:hover { border-color: #1A0E09; color: #1A0E09; }
+
+    .test-right { position: relative; }
+    .test-card {
+      background: #F9F7F4;
+      padding: 44px;
+      position: relative;
+      z-index: 2;
+    }
+    .test-quote {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #333;
+      margin-bottom: 28px;
+      font-style: italic;
+      position: relative;
+      padding-left: 28px;
+    }
+    .test-quote::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      color: #C87A3F;
+      position: absolute;
+      top: -12px;
+      left: -4px;
+      line-height: 1;
+    }
+    .author-row { display: flex; align-items: center; gap: 14px; }
+    .author-img { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: #C87A3F; }
+    .author-img img { width: 100%; height: 100%; object-fit: cover; }
+    .author-name { font-weight: 700; font-size: 0.88rem; }
+    .author-role { font-size: 0.78rem; color: #888; }
+    /* Background images behind test card */
+    .test-bg-imgs {
+      position: absolute;
+      top: -20px; right: -20px; bottom: -20px;
+      width: 55%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      z-index: 1;
+      opacity: 0.3;
+    }
+    .test-bg-imgs img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* =============================================
+       10. CTA
+       ============================================= */
+    .cta-section { padding: 0 0 88px; }
+    .cta-box {
+      position: relative;
+      overflow: hidden;
+      padding: 72px 40px;
+      text-align: center;
+      color: #fff;
+    }
+    .cta-box > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .cta-box::after { content:''; position: absolute; inset: 0; background: rgba(20,12,8,0.82); }
+    .cta-box > *:not(img) { position: relative; z-index: 2; }
+    .cta-box h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 600; margin-bottom: 12px; }
+    .cta-box p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 28px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+    /* =============================================
+       11. FAQ
+       ============================================= */
+    .faq { padding: 0 0 88px; }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid #E8E4DF; }
+    .faq-q {
+      width: 100%;
+      text-align: left;
+      padding: 26px 0;
+      font-weight: 700;
+      font-size: 1.02rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #1A0E09;
+      transition: color 0.25s;
+    }
+    .faq-q:hover { color: #8B4513; }
+    .faq-icon { font-size: 1.3rem; font-weight: 300; transition: transform 0.3s; }
+    .faq-item.active .faq-icon { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-item.active .faq-a { max-height: 150px; }
+    .faq-a p { font-size: 0.88rem; color: #666; line-height: 1.7; padding-bottom: 22px; }
+
+    /* =============================================
+       12. FOOTER
+       ============================================= */
+    .footer { background: #1A0E09; color: #fff; padding: 56px 0 20px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1.4fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 36px;
+    }
+    .footer h5 { font-size: 0.85rem; font-weight: 600; margin-bottom: 14px; }
+    .footer p, .footer a { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.75; }
+    .footer a:hover { color: #fff; }
+    .quick-links { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 4px; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 20px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 1024px) {
+      .hero-content { gap: 32px; padding-top: 60px; padding-bottom: 44px; }
+      .how-step { height: 300px; }
+      .projects-info { padding: 56px 40px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: #fff; padding: 20px 24px; gap: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+      .hamburger { display: flex; }
+      .hero-content { grid-template-columns: 1fr; gap: 20px; padding-top: 48px; padding-bottom: 36px; }
+      .hero h1 { font-size: clamp(2.2rem, 8vw, 3.2rem); }
+      .hero-desc p { max-width: 100%; }
+      .hero-img { height: 240px; }
+      .exp-row { grid-template-columns: 1fr; gap: 20px; }
+      .stats { grid-template-columns: 1fr; gap: 28px; }
+      .how-header { grid-template-columns: 1fr; gap: 16px; }
+      .how-grid { grid-template-columns: 1fr 1fr; }
+      .how-step { height: 260px; }
+      .projects { grid-template-columns: 1fr; }
+      .projects-photo { min-height: 320px; }
+      .test-grid { grid-template-columns: 1fr; gap: 32px; }
+      .test-bg-imgs { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .container { padding-left: 16px; padding-right: 16px; }
+      .navbar .container { height: 56px; }
+      .hero h1 { font-size: 2rem; }
+      .hero-content { padding-top: 36px; padding-bottom: 28px; }
+      .hero-img { height: 200px; }
+      .we-do-title { font-size: 4rem; letter-spacing: -1px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .cta-box { padding: 48px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== 1. TOP BAR ===== -->
+  <div class="top-bar">Now Licensed in 30+ States</div>
+
+  <!-- ===== 2. NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="logo">
+        <div class="logo-mark">W<span class="dot">●</span>R</div>
+        <div class="logo-words"><span class="w1">WOODROCK</span><span class="w2">ENGINEERING</span></div>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#">Services</a>
+        <a href="#">About</a>
+        <a href="#">Portfolio</a>
+        <a href="#">Blog</a>
+        <a href="#">Contact</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <!-- ===== 3. HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div><h1>ENGINEERS THAT<br>ACTUALLY LISTEN</h1></div>
+        <div class="hero-desc">
+          <p>America's #1 Post Frame Engineering and Design Firm. Experience The Woodrock Way — we know Post Frame!</p>
+          <a href="#" class="btn-cta btn-outline-light">Contact Us <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-img">
+      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1440&h=500&fit=crop&crop=bottom" alt="Construction worker surveying a building site" loading="eager">
+    </div>
+  </section>
+
+  <!-- ===== 4. EXPERIENCE + STATS ===== -->
+  <section class="experience">
+    <div class="container">
+      <div class="exp-row">
+        <h3 class="reveal" data-anim="up">ENGINEERING BACKED BY<br>PROVEN EXPERIENCE</h3>
+        <p class="reveal" data-anim="up" style="animation-delay:0.15s">Woodrock Engineering provides licensed structural engineering and architectural design services for the post frame industry. We focus on practical engineering and design solutions that meet code requirements and work with the builder's preferred method of installation.</p>
+      </div>
+      <div class="stats">
+        <div class="reveal" data-anim="up" style="animation-delay:0.1s">
+          <div class="stat-num">30+</div>
+          <p class="stat-text">U.S. states licensed, supporting projects that require consistent engineering standards across jurisdictions.</p>
+        </div>
+        <div class="reveal" data-anim="up" style="animation-delay:0.2s">
+          <div class="stat-num">1000+</div>
+          <p class="stat-text">Projects engineered nationwide, across commercial and post-frame building types.</p>
+        </div>
+        <div class="reveal" data-anim="up" style="animation-delay:0.3s">
+          <div class="stat-num">5</div>
+          <p class="stat-text">Core structural systems engineered, including post-frame, timber, steel, and concrete structures.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. US MAP ===== -->
+  <section class="map-section reveal" data-anim="fade">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Blank_US_Map_%28states_only%29.svg/1200px-Blank_US_Map_%28states_only%29.svg.png" alt="Map of US states where Woodrock is licensed">
+  </section>
+
+  <!-- ===== 6. WE DO ===== -->
+  <section class="we-do">
+    <div class="container">
+      <div class="we-do-title reveal" data-anim="up">WE DO</div>
+      <div class="we-do-tags">
+        <span class="we-do-tag reveal" data-anim="up" style="animation-delay:0.05s">footings</span>
+        <span class="we-do-tag reveal" data-anim="up" style="animation-delay:0.1s">concrete slabs</span>
+        <span class="we-do-tag reveal" data-anim="up" style="animation-delay:0.15s">barndos</span>
+        <span class="we-do-tag reveal" data-anim="up" style="animation-delay:0.2s">floating slabs</span>
+        <span class="we-do-tag reveal" data-anim="up" style="animation-delay:0.25s">post frames</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 7. HOW IT WORKS ===== -->
+  <section class="how-it-works">
+    <div class="container">
+      <div class="how-header">
+        <h2 class="reveal" data-anim="up">HOW IT WORKS</h2>
+        <p class="reveal" data-anim="up" style="animation-delay:0.1s">A clear, straightforward process that takes your project from the first conversation through design, coordination, and a foundation built to perform.</p>
+      </div>
+    </div>
+    <div class="how-grid">
+      <div class="how-step">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=500&h=450&fit=crop" alt="Discuss your project" loading="lazy">
+        <div class="how-overlay"><div class="how-num">1</div><p>Talk through your project</p></div>
+      </div>
+      <div class="how-step">
+        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=500&h=450&fit=crop" alt="Plan the solution" loading="lazy">
+        <div class="how-overlay"><div class="how-num">2</div><p>Plan the right solution</p></div>
+      </div>
+      <div class="how-step">
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&h=450&fit=crop" alt="Execute with precision" loading="lazy">
+        <div class="how-overlay"><div class="how-num">3</div><p>Execute with precision</p></div>
+      </div>
+      <div class="how-step">
+        <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=450&fit=crop" alt="Finish strong" loading="lazy">
+        <div class="how-overlay"><div class="how-num">4</div><p>Finish strong</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 8. OUR PROJECTS ===== -->
+  <section class="projects">
+    <div class="projects-info">
+      <div class="projects-label">OUR PROJECTS</div>
+      <h2>Proven engineering behind structures built to perform in the real world.</h2>
+      <div>
+        <div class="project-item"><strong>BIG OYSTER BREWERY</strong><span class="ptag">Commercial Structural Support</span></div>
+        <div class="project-item"><strong>Commercial Warehouse Structure</strong><span class="ptag">Scalable structural systems for modern buildings</span></div>
+        <div class="project-item"><strong>Agricultural Equipment Storage Facility</strong><span class="ptag">Agricultural / Post-Frame Structure</span></div>
+      </div>
+    </div>
+    <div class="projects-photo">
+      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&h=700&fit=crop" alt="Big Oyster Brewery project" loading="lazy">
+    </div>
+  </section>
+
+  <!-- ===== 9. TESTIMONIAL ===== -->
+  <section class="testimonial">
+    <div class="container">
+      <div class="test-grid">
+        <div class="test-left reveal" data-anim="left">
+          <h3>WHAT IT'S LIKE TO WORK<br>WITH WOODROCK</h3>
+          <p>Builders, contractors, and designers choose Woodrock because our drawings are clear, practical, and built for the realities of the job site.</p>
+          <a href="#" class="btn-cta btn-outline-dark">Contact Us <span class="arrow">→</span></a>
+          <div class="test-nav">
+            <button class="test-nav-btn">←</button>
+            <button class="test-nav-btn">→</button>
+          </div>
+        </div>
+        <div class="test-right reveal" data-anim="right">
+          <div class="test-card">
+            <p class="test-quote">Woodrock's drawings were clear, practical, and easy to build from. Details were resolved early, which saved time on site and avoided unnecessary back-and-forth during construction. When questions came up, their team was responsive and understood how things actually get built in the field.</p>
+            <div class="author-row">
+              <div class="author-img"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face" alt="Mark Reynolds"></div>
+              <div><div class="author-name">Mark Reynolds</div><div class="author-role">General Contractor</div></div>
+            </div>
+          </div>
+          <div class="test-bg-imgs">
+            <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=300&h=300&fit=crop" alt="" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=300&h=300&fit=crop" alt="" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 10. CTA ===== -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box reveal" data-anim="scale">
+        <img src="https://images.unsplash.com/photo-1590644365607-1c5e0a3b1b29?w=1200&h=400&fit=crop" alt="" loading="lazy">
+        <h2>Built around your project, not a template.</h2>
+        <p>Every site, structure, and client comes with different challenges — we design accordingly.</p>
+        <a href="#" class="btn-cta btn-outline-white">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 11. FAQ ===== -->
+  <section class="faq">
+    <div class="container">
+      <div class="faq-inner">
+        <div class="faq-item"><button class="faq-q">WHAT IS WOODROCK? <span class="faq-icon">+</span></button><div class="faq-a"><p>Woodrock Engineering is a structural engineering firm specializing in post frame, timber frame, and outdoor structure engineering across 30+ U.S. states.</p></div></div>
+        <div class="faq-item"><button class="faq-q">WHAT DO WE DO AT WOODROCK? <span class="faq-icon">+</span></button><div class="faq-a"><p>We provide engineering stamps, structural reports, architectural design, CAD drawings, and consulting services specifically for post frame and related construction systems.</p></div></div>
+        <div class="faq-item"><button class="faq-q">HOW CAN I GET IN TOUCH? <span class="faq-icon">+</span></button><div class="faq-a"><p>You can reach us at (302) 342-0027 or email office@woodrockengineering.com. Visit our Contact page to submit a project inquiry.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 12. FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="logo" style="margin-bottom:8px;">
+            <div class="logo-mark" style="color:#fff;">W<span class="dot">●</span>R</div>
+            <div class="logo-words"><span class="w1" style="color:#fff;">WOODROCK</span><span class="w2">ENGINEERING</span></div>
+          </a>
+        </div>
+        <div>
+          <h5>Let's Discuss Your Vision</h5>
+          <a href="#" class="btn-cta btn-outline-white" style="padding:9px 18px;font-size:0.78rem;margin-top:6px;">Contact Us</a>
+        </div>
+        <div>
+          <h5>Our Office</h5>
+          <p>101 Cassidy Drive Suite C<br>Dover, DE 19901</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <p>(302) 342-0027<br><a href="mailto:office@woodrockengineering.com">office@woodrockengineering.com</a></p>
+        </div>
+      </div>
+      <div>
+        <h5>Quick Links</h5>
+        <div class="quick-links"><a href="#">Home</a><a href="#">Projects</a><a href="#">Expertise</a><a href="#">About</a></div>
+      </div>
+      <div class="footer-bottom" style="margin-top:28px;"><p>© Copyright 2025 Woodrock Engineering. All Right Reserved.</p></div>
+    </div>
+  </footer>
+
+  <!-- ===== JS ===== -->
+  <script>
+    // Navbar scroll
+    const nb = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nb.classList.toggle('scrolled', window.scrollY > 30));
+
+    // Mobile menu
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // FAQ
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const open = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!open) item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
